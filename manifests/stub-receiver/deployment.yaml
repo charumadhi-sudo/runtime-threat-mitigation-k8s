@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stub-receiver
+  namespace: shop
+  labels:
+    app: stub-receiver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: stub-receiver
+  template:
+    metadata:
+      labels:
+        app: stub-receiver
+    spec:
+      containers:
+      - name: stub-receiver
+        image: stub-receiver:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8000
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: stub-receiver
+  namespace: shop
+  labels:
+    app: stub-receiver
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8000
+    targetPort: 8000
+    protocol: TCP
+    name: http
+  selector:
+    app: stub-receiver

@@ -1,0 +1,28 @@
+# manifests/falco/falcosidekick-values.yaml
+#
+# Falcosidekick Helm values for RTM-Kubernetes - Phase 1
+#
+# DEPLOYMENT CHOICE: Standalone chart (falcosecurity/falcosidekick)
+# Why standalone instead of the Falco chart's built-in subchart:
+#   1. The built-in subchart (falco.falcosidekick.enabled=true) uses the Falco
+#      chart's own subchart version, which may lag behind the standalone chart.
+#   2. A separate Helm release gives independent upgrade lifecycle — we can
+#      update Falcosidekick config/version without touching Falco's DaemonSet.
+#   3. Cleaner separation of concerns for Phase 3, when Falcosidekick config
+#      will change significantly (multiple outputs, filtering rules).
+#
+# Falco is configured (in falco-values.yaml) to POST JSON alerts to Falcosidekick
+# at http://falcosidekick.falco.svc.cluster.local:2801.
+#
+# Falcosidekick then forwards to the stub-receiver webhook in the shop namespace.
+# Stub-receiver URL: http://stub-receiver.shop.svc.cluster.local:8000/alerts
+# (THIS IS TEMPORARY — will be replaced with real policy engine in Phase 3)
+#
+config:
+  debug: true
+  webhook:
+    # -- Forward all Falco alerts to our stub receiver webhook.
+    # The stub receiver is deployed in the shop namespace as a ClusterIP service.
+    address: "http://stub-receiver.shop.svc.cluster.local:8000/alerts"
+    method: "POST"
+    minimumpriority: ""
