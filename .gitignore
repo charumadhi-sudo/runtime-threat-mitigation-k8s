@@ -1,0 +1,48 @@
+# ==============================================================================
+# Git Ignore Rules for Runtime Threat Mitigation in Kubernetes
+# ==============================================================================
+
+# Exclude Kubernetes cluster connection configs and credentials
+*.kubeconfig
+kubeconfig
+.kube/
+config.yaml
+config.json
+
+# Exclude environment files containing sensitive tokens or configuration overrides
+.env
+.env.*
+*.env
+
+# Exclude Python bytecode, cache directories, and virtual environments
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+ENV/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Exclude Helm chart build artifacts and packaged archives
+*.tgz
+charts/*.tgz
+.helm/
+
+# Exclude local cryptographic keys, TLS certificates, and secrets
+*.pem
+*.key
+*.crt
+*.csr
+secrets/
+*.p12
+
+# Exclude IDE and OS specific metadata
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
