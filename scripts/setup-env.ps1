@@ -8,6 +8,9 @@
 
 $ErrorActionPreference = "Stop"
 
+# Refresh PATH from registry to pick up newly installed winget packages
+$env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
+
 Write-Host "==================================================================" -ForegroundColor Cyan
 Write-Host "  Runtime Threat Mitigation in K8s - Phase 0 Environment Setup" -ForegroundColor Cyan
 Write-Host "==================================================================" -ForegroundColor Cyan
