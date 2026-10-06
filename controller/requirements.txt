@@ -1,0 +1,16 @@
+# Runtime Threat Mitigation - Python Policy-Decision Controller Dependencies
+
+# Web framework & HTTP server
+fastapi>=0.110.0
+uvicorn[standard]>=0.29.0
+requests>=2.31.0
+
+# Kubernetes Python Client
+kubernetes>=30.0.0
+
+# Data validation & settings
+pydantic>=2.7.0
+pyyaml>=6.0.1
+
+# Observability & Metrics exporter
+prometheus-client>=0.20.0

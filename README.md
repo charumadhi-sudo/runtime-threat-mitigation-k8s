@@ -29,10 +29,10 @@
 - **Attack Simulation**: Custom Bash & Python exploit scripts
 
 ## Project Phases Checklist
-- [ ] **Phase 0: Environment Setup & Scaffolding**
-  - [ ] Local K8s cluster provisioned (Kind / Minikube)
-  - [ ] Helm & CLI toolchain configured
-  - [ ] Repository structure & Git workflow established
+- [x] **Phase 0: Environment Setup & Scaffolding**
+  - [x] Local K8s cluster provisioned (Kind / Minikube configuration)
+  - [x] Helm & CLI toolchain configured
+  - [x] Repository structure & Git workflow established
 - [ ] **Phase 1: Threat Detection & Alert Routing**
   - [ ] Falco deployed with eBPF driver
   - [ ] Custom Falco threat rules defined (shell execution, privilege escalation, suspicious file access)
