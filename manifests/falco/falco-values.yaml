@@ -1,0 +1,44 @@
+# manifests/falco/falco-values.yaml
+#
+# Falco Helm values for RTM-Kubernetes - Phase 1
+#
+# DRIVER SELECTION: driver.kind = auto
+# Why: On this WSL2-backed Kind cluster (kernel 6.18.33.2-microsoft-standard-WSL2),
+# the old 'ebpf' driver mode is no longer a valid option in Falco chart v9+.
+# Setting kind: auto causes falcoctl to probe the kernel and select the best
+# available driver at runtime. In practice, on this kernel version (>=5.8),
+# 'auto' resolves to 'modern_ebpf' — confirmed from the falco-driver-loader
+# init container log:
+#   type: modern_ebpf
+#   INFO: No artifacts needed for the selected driver.
+# The modern eBPF probe is a CO-RE (Compile Once, Run Everywhere) BPF program
+# compiled into the Falco binary itself — it requires NO kernel headers and NO
+# out-of-tree kernel module build. This is the correct and stable approach for
+# WSL2 kernels where compiling a kmod is unreliable.
+#
+# NOTE: 'modern_ebpf' runs with a privileged container (leastPrivileged: false
+# is the default) so that it can attach BPF programs to the kernel.
+#
+driver:
+  enabled: true
+  # -- 'auto' will probe the kernel and pick modern_ebpf on this WSL2 kernel.
+  # Do NOT change to 'ebpf' — that mode was removed in chart v9 (BREAKING-CHANGES.md).
+  kind: auto
+
+# CRITICAL for WSL2/Kind: modern_ebpf needs to run in the root PID namespace.
+# Without hostPID: true, Falco logs "disabled BPF iterators (not running in the
+# root PID namespace)" and captures ZERO syscalls — completely blind.
+# This is safe and expected: Falco is a privileged security DaemonSet.
+podTemplateSpec:
+  hostPID: true
+ 
+tty: true
+
+# Route all Falco alerts to Falcosidekick (deployed as a separate standalone chart).
+# Falcosidekick listens on port 2801 in the falco namespace.
+falco:
+  json_output: true
+  json_include_output_property: true
+  http_output:
+    enabled: true
+    url: "http://falcosidekick.falco.svc.cluster.local:2801"
